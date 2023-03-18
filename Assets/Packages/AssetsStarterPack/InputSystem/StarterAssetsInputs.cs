@@ -1,5 +1,5 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
 
@@ -20,7 +20,7 @@ namespace StarterAssets
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+#if ENABLE_INPUT_SYSTEM
 		public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
@@ -42,6 +42,26 @@ namespace StarterAssets
 		public void OnSprint(InputValue value)
 		{
 			SprintInput(value.isPressed);
+		}
+
+		public void OnSkin(InputValue value)
+		{
+			SkinInput();
+		}
+
+		public void OnCamera(InputValue value)
+		{
+			CameraInput();
+		}
+
+		public void OnFocus(InputValue value)
+		{
+			SetCursorState(true);
+		}
+
+		public void OnUnfocus(InputValue value)
+		{
+			SetCursorState(false);
 		}
 #endif
 
@@ -66,6 +86,16 @@ namespace StarterAssets
 			sprint = newSprintState;
 		}
 
+		public void SkinInput()
+		{
+			
+		}
+
+		public void CameraInput()
+		{
+			
+		}
+		
 		private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);

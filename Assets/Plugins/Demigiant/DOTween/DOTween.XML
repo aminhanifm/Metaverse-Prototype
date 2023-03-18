@@ -154,7 +154,7 @@
             </summary>
         </member>
         <member name="F:DG.Tweening.Core.Enums.SafeModeLogBehaviour.None">
-            <summary>No logs. NOT RECOMMENDED</summary>
+            <summary>No logs. NOT RECOMPENDED</summary>
         </member>
         <member name="F:DG.Tweening.Core.Enums.SafeModeLogBehaviour.Normal">
             <summary>Throw a normal log</summary>

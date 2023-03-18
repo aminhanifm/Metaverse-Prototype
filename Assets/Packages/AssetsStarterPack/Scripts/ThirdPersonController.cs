@@ -3,6 +3,8 @@
 using UnityEngine.InputSystem;
 #endif
 
+using MetaversePrototype.Tools;
+
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
  */
 
@@ -110,6 +112,20 @@ namespace StarterAssets
 
         private bool _hasAnimator;
 
+        public float CinemachineTargetYaw 
+        { 
+            get { return _cinemachineTargetYaw; } 
+            set { _cinemachineTargetYaw = value; }
+        }
+
+        public float CinemachineTargetPitch 
+        { 
+            get { return _cinemachineTargetPitch; } 
+            set { _cinemachineTargetPitch = value; }
+        }
+
+        MPSoundManagerPlayOptions audioOptions;
+
         private bool IsCurrentDeviceMouse
         {
             get
@@ -136,6 +152,7 @@ namespace StarterAssets
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
+            audioOptions = new MPSoundManagerPlayOptions();
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
@@ -200,6 +217,7 @@ namespace StarterAssets
 
                 _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
                 _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
+
             }
 
             // clamp our rotations so our values are limited 360 degrees
@@ -376,7 +394,14 @@ namespace StarterAssets
                 if (FootstepAudioClips.Length > 0)
                 {
                     var index = Random.Range(0, FootstepAudioClips.Length);
-                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                    audioOptions = MPSoundManagerPlayOptions.Default;
+                    audioOptions.MPSoundManagerTrack = MPSoundManager.MPSoundManagerTracks.Sfx;
+                    audioOptions.SpatialBlend = 1;
+                    audioOptions.MinDistance = 1;
+                    audioOptions.MaxDistance = 10;
+                    audioOptions.Location = transform.TransformPoint(_controller.center);
+                    audioOptions.Volume = FootstepAudioVolume;
+                    MPSoundManager.Instance.PlaySound(FootstepAudioClips[index], audioOptions);
                 }
             }
         }
@@ -385,7 +410,14 @@ namespace StarterAssets
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                audioOptions = MPSoundManagerPlayOptions.Default;
+                audioOptions.MPSoundManagerTrack = MPSoundManager.MPSoundManagerTracks.Sfx;
+                audioOptions.SpatialBlend = 1;
+                audioOptions.MinDistance = 1;
+                audioOptions.MaxDistance = 10;
+                audioOptions.Location = transform.TransformPoint(_controller.center);
+                audioOptions.Volume = FootstepAudioVolume;
+                MPSoundManager.Instance.PlaySound(LandingAudioClip, audioOptions);
             }
         }
     }

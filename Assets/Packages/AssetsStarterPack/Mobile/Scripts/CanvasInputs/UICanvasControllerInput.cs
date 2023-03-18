@@ -6,26 +6,41 @@ namespace StarterAssets
     {
 
         [Header("Output")]
-        public StarterAssetsInputs starterAssetsInputs;
+        protected StarterAssetsInputs starterAssetsInputs;
+        public StarterAssetsInputs _StarterAssetsInputs
+        {
+            get {return starterAssetsInputs;}
+            set {starterAssetsInputs = value;}
+        }
 
-        public void VirtualMoveInput(Vector2 virtualMoveDirection)
+        public virtual void VirtualMoveInput(Vector2 virtualMoveDirection)
         {
             starterAssetsInputs.MoveInput(virtualMoveDirection);
         }
 
-        public void VirtualLookInput(Vector2 virtualLookDirection)
+        public virtual void VirtualLookInput(Vector2 virtualLookDirection)
         {
             starterAssetsInputs.LookInput(virtualLookDirection);
         }
 
-        public void VirtualJumpInput(bool virtualJumpState)
+        public virtual void VirtualJumpInput(bool virtualJumpState)
         {
             starterAssetsInputs.JumpInput(virtualJumpState);
         }
 
-        public void VirtualSprintInput(bool virtualSprintState)
+        public virtual void VirtualSprintInput(bool virtualSprintState)
         {
             starterAssetsInputs.SprintInput(virtualSprintState);
+        }
+
+        public virtual void VirtualSkinInput()
+        {
+            starterAssetsInputs.SkinInput();
+        }
+
+        public virtual void VirtualCameraInput()
+        {
+            starterAssetsInputs.CameraInput();
         }
         
     }

@@ -60,7 +60,7 @@ namespace MetaversePrototype.Tools
 	    	
 		public override GameObject GetPooledGameObject()
 		{
-			// we go through the pool looking for an inactive object
+			// we go through the pool looking for an inactive object\
 			for (int i=0; i< _pooledGameObjects.Count; i++)
 			{
 				if (!_pooledGameObjects[i].gameObject.activeInHierarchy)

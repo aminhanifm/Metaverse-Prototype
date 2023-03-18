@@ -8,26 +8,33 @@ For the time-being; this script will disable a PlayerInput's auto switch control
 */
 
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
 
-public class MobileDisableAutoSwitchControls : MonoBehaviour
+using MetaversePrototype.Tools;
+
+public class MobileDisableAutoSwitchControls : MPSingleton<MobileDisableAutoSwitchControls>
 {
     
-#if ENABLE_INPUT_SYSTEM && (UNITY_IOS || UNITY_ANDROID) && STARTER_ASSETS_PACKAGES_CHECKED
+#if ENABLE_INPUT_SYSTEM && (UNITY_IOS || UNITY_ANDROID)
 
     [Header("Target")]
-    public PlayerInput playerInput;
+    protected PlayerInput playerInput;
+    public PlayerInput _PlayerInput
+    {
+        get {return playerInput;}
+        set {playerInput = value;}
+    }
 
     void Start()
     {
         DisableAutoSwitchControls();
     }
 
-    void DisableAutoSwitchControls()
+    public void DisableAutoSwitchControls()
     {
-        playerInput.neverAutoSwitchControlSchemes = true;
+        if(playerInput != null) playerInput.neverAutoSwitchControlSchemes = true;
     }
 
 #endif
