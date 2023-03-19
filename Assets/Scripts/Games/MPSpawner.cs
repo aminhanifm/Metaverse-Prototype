@@ -35,9 +35,9 @@ namespace MetaversePrototype.Game
 
             Vector3 spawnPosition = MPBoundsExtensions.MPRandomPointInBounds(_collider.bounds);
 
-            #if UNITY_EDITOR
-                EditorGUIUtility.PingObject(spawnedObject);
-            #endif
+            // #if UNITY_EDITOR
+            //     EditorGUIUtility.PingObject(spawnedObject);
+            // #endif
 
             spawnedObject.transform.position = spawnPosition;
             // spawnedObject.transform.rotation = Quaternion.AngleAxis(Random.Range(0,360), Vector3.up);;

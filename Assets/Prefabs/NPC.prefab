@@ -2515,6 +2515,7 @@ Transform:
   - {fileID: 4169417775840364940}
   - {fileID: 4169417774216127949}
   - {fileID: 4169417774078677513}
+  - {fileID: 7640356334532065709}
   m_Father: {fileID: 4169417775816642312}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2547,6 +2548,9 @@ MonoBehaviour:
     Transitions:
       array:
       - Decision: {fileID: 4169417774078677512}
+        TrueState: Destroy
+        FalseState: 
+      - Decision: {fileID: 2949023005647219225}
         TrueState: Destroy
         FalseState: 
   - StateName: Move Random
@@ -4108,6 +4112,7 @@ GameObject:
   - component: {fileID: 4169417775816642544}
   - component: {fileID: 4169417775816642315}
   - component: {fileID: 4169417775816642314}
+  - component: {fileID: 2989782621302534930}
   m_Layer: 8
   m_Name: NPC
   m_TagString: Player
@@ -4618,7 +4623,19 @@ NavMeshAgent:
   m_Height: 2
   m_BaseOffset: -0.05
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 3
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &2989782621302534930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4169417775816642545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0130de9ad8bede54e9ea53838d4ecb84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4169417775840364941
 GameObject:
   m_ObjectHideFlags: 0
@@ -5964,3 +5981,50 @@ Transform:
   m_Father: {fileID: 4169417775593555993}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4827562884337803962
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7640356334532065709}
+  - component: {fileID: 2949023005647219225}
+  m_Layer: 0
+  m_Name: AIDecision - Patrol Time In State
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7640356334532065709
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4827562884337803962}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4169417775092215806}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2949023005647219225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4827562884337803962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ca2332e6b2d83c46af39b7d2e6a080c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Label: Patrol Time
+  AfterTimeMin: 30
+  AfterTimeMax: 60
