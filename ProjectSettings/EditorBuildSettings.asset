@@ -9,8 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Loading.unity
     guid: 7d55a3692d06c38479fb378f1ce5b529
   - enabled: 0
-    path: Assets/Scenes/Prototype Demo.unity
-    guid: c9a282960d5f1124fb56880da3b7f390
+    path: Assets/BundledAssets/Prototype Demo.unity
+    guid: 39bd82bbc80fd8941b30a40a03834075
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7,
       type: 2}

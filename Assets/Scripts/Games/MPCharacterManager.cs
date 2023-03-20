@@ -89,7 +89,7 @@ namespace MetaversePrototype.Game
             }
         }
 
-        private void LateUpdate() {
+        private void FixedUpdate() {
             if(characterType == CharacterType.NPC && PhotonNetwork.IsMasterClient)
             {
                 ConvertAIInput();
@@ -144,7 +144,7 @@ namespace MetaversePrototype.Game
 
             private void ConvertAIInput(){
                 // Get the agent's velocity and drop the y component
-                Vector3 velocity = agent.velocity;
+                Vector3 velocity = agent.desiredVelocity;
                 Vector2 horizontalVelocity = new Vector2(velocity.x, velocity.z);
 
                 // Normalize the vector to get a direction vector

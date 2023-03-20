@@ -72,10 +72,29 @@ namespace MetaversePrototype.Game
                 PhotonNetwork.LoadLevel("Prototype Demo");
             }
         }
-        protected const string url = "https://firebasestorage.googleapis.com/v0/b/metaverse-prototype.appspot.com/o/prototype%20demo?alt=media&token=61ef6b4c-387a-44d1-b37b-9189b851dd45";
+        protected const string urlAndroid = "https://firebasestorage.googleapis.com/v0/b/metaverse-prototype.appspot.com/o/Android%2Fprototype%20demo?alt=media&token=bf7b4474-39f1-4898-a6bc-28886e2d3ff3";
+        protected const string urlWindow = "https://firebasestorage.googleapis.com/v0/b/metaverse-prototype.appspot.com/o/Windows%2Fprototype%20demo?alt=media&token=031becef-688a-4234-883d-d114b84569cf";
+        protected const string urlWebGL = "https://firebasestorage.googleapis.com/v0/b/metaverse-prototype.appspot.com/o/WebGL%2Fprototype%20demo?alt=media&token=0a031a0a-1512-4611-8d91-50d2f9c5eb47";
         protected const string bundleName = "prototype demo";
         IEnumerator LoadBundles(){
-    
+            string url = string.Empty;
+
+            switch (Application.platform)
+            {
+                case RuntimePlatform.WindowsPlayer:
+                    url = urlWindow;
+                    break;
+                case RuntimePlatform.WebGLPlayer:
+                    url = urlWebGL;
+                    break;
+                case RuntimePlatform.Android:
+                    url = urlAndroid;
+                    break;
+                default:
+                    url = urlAndroid;
+                    break;
+            }
+            
             UnityWebRequest www = UnityWebRequestAssetBundle.GetAssetBundle(url);
             StartCoroutine(WaitForResponse(www));
             yield return www.SendWebRequest();
