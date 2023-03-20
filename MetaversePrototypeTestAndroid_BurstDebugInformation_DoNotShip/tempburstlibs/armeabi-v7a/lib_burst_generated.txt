@@ -154,7 +154,6 @@ Library: D:\Hanif\Github\Metaverse-Prototype\Temp\StagingArea\tempburstlibs\arme
 --compilation-defines=MODULE_PHYSICS_2D_EXISTS
 --compilation-defines=MODULE_PARTICLE_SYSTEM_EXISTS
 --compilation-defines=NMC_CAN_ACCESS_TERRAIN
---compilation-defines=ENABLE_ASYNC_ASSETBUNDLE_UWR
 --compilation-defines=CINEMACHINE_POST_PROCESSING_V2
 --compilation-defines=CINEMACHINE_TIMELINE
 --compilation-defines=CINEMACHINE_PHYSICS_2D
