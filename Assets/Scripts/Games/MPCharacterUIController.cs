@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cinemachine;
 using StarterAssets;
+using Photon.Pun;
 
 namespace MetaversePrototype.Game
 {
@@ -54,15 +55,11 @@ namespace MetaversePrototype.Game
         public override void VirtualSprintInput(bool virtualSprintState)
         {
             base.VirtualSprintInput(virtualSprintState);
-
-            print("Test");
         }
 
         public override void VirtualSkinInput()
         {
             base.VirtualSkinInput();
-
-            print("Test2");
 
             int curSkin = (int)characterManager.curSkinType;
             
@@ -73,6 +70,8 @@ namespace MetaversePrototype.Game
 
             characterManager.skinDictionary[(MPCharacterManager.SkinType)curSkin].gameObject.SetActive(true);
             characterManager.curSkinType = (MPCharacterManager.SkinType)curSkin;
+
+            characterManager.photonView.RPC("SetSkin", RpcTarget.AllBuffered, characterManager.curSkinType);
         }
 
         public override void VirtualCameraInput()
@@ -97,7 +96,7 @@ namespace MetaversePrototype.Game
                     break;
                 case MPCharacterManager.ControllerType.TPS:
                 
-                    Vector3 cameraForward = mainCam.transform.forward;
+                    Vector3 cameraForward = new Vector3(mainCam.transform.forward.x, 0f, mainCam.transform.forward.z);
                     characterManager.transform.LookAt(characterManager.transform.position + cameraForward, Vector3.up);
                     
                     characterManager._TPSController.enabled = false;

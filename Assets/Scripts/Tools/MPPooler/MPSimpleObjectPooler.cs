@@ -1,12 +1,21 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using System.Text;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 
 namespace MetaversePrototype.Tools
 {
 	public class MPSimpleObjectPooler : MPObjectPooler 
 	{
+		public readonly Dictionary<string, GameObject> ResourceCache = new Dictionary<string, GameObject>();
 		// the game object we'll instantiate 
 		public GameObject GameObjectToPool;
 		// the number of objects we'll add to the pool
@@ -16,9 +25,18 @@ namespace MetaversePrototype.Tools
 
 		// the actual object pool
 		protected List<GameObject> _pooledGameObjects;
+		public List<GameObject> PooledGameObjects {get {return _pooledGameObjects;} set {_pooledGameObjects = value;}}
+		protected int[] viewIDList;
+		public int[] _ViewIDList {get {return viewIDList;}}
 	    
 		public List<MPSimpleObjectPooler> Owner { get; set; }
 		private void OnDestroy() { Owner?.Remove(this); }
+		private PhotonView photonView;
+
+		protected override void Awake() {
+			photonView = gameObject.MPGetComponentNoAlloc<PhotonView>();
+			viewIDList = new int[0];	
+		}
 
 		public override void FillObjectPool()
 		{
@@ -66,6 +84,9 @@ namespace MetaversePrototype.Tools
 				if (!_pooledGameObjects[i].gameObject.activeInHierarchy)
 				{
 					// if we find one, we return it
+					#if UNITY_EDITOR
+						EditorGUIUtility.PingObject(_pooledGameObjects[i]);
+					#endif
 					return _pooledGameObjects[i];
 				}
 			}
@@ -78,30 +99,56 @@ namespace MetaversePrototype.Tools
 			return null;
 		}
 		
+		[PunRPC]
+		public void SetObjectsPool(int viewID, bool initialStatus){
+			GameObject newGameObject = PhotonView.Find(viewID).gameObject;
+
+			newGameObject.SetActive(initialStatus);
+			// SceneManager.MoveGameObjectToScene(newGameObject, this.gameObject.scene);
+			if (NestWaitingPool)
+			{
+				newGameObject.transform.SetParent(_waitingPool.transform);	
+			}
+
+			_pooledGameObjects.Add(newGameObject);
+
+			_objectPool.PooledGameObjects.Add(newGameObject);
+		}
+
 		protected virtual GameObject AddOneObjectToThePool()
 		{
+			if(!PhotonNetwork.IsMasterClient){
+				Debug.LogWarning("Test");
+				return null;
+			}
+
 			if (GameObjectToPool == null)
 			{
 				Debug.LogWarning("The "+gameObject.name+" ObjectPooler doesn't have any GameObjectToPool defined.", gameObject);
 				return null;
 			}
 
-			bool initialStatus = GameObjectToPool.activeSelf;
-			GameObjectToPool.SetActive(false);
-			GameObject newGameObject = (GameObject)Instantiate(GameObjectToPool);
-			GameObjectToPool.SetActive(initialStatus);
-			SceneManager.MoveGameObjectToScene(newGameObject, this.gameObject.scene);
-			if (NestWaitingPool)
-			{
-				newGameObject.transform.SetParent(_waitingPool.transform);	
+			if(_objectPool.PooledGameObjects.Count < PoolSize){
+				bool initialStatus = GameObjectToPool.activeSelf;
+				GameObjectToPool.SetActive(false);
+				
+				GameObject newGameObject = null;
+				StringBuilder pooledObjName = new StringBuilder();
+				pooledObjName.Append(GameObjectToPool.name + "-" + _pooledGameObjects.Count);
+
+				newGameObject = PhotonNetwork.InstantiateRoomObject(GameObjectToPool.name, Vector3.zero, Quaternion.identity);
+				
+				PhotonView pvObj = newGameObject.MPGetComponentNoAlloc<PhotonView>();
+				
+				viewIDList = viewIDList.Append(pvObj.ViewID).ToArray();
+				photonView.RPC("SetObjectsPool", RpcTarget.AllBufferedViaServer, pvObj.ViewID, initialStatus);
+				// photonView.RPC("SetNPCListRPC", RpcTarget.MasterClient, pvObj.ViewID);
+				return newGameObject;
 			}
-			newGameObject.name = GameObjectToPool.name + "-" + _pooledGameObjects.Count;
+				
+			return null;
 
-			_pooledGameObjects.Add(newGameObject);
-
-			_objectPool.PooledGameObjects.Add(newGameObject);
-
-			return newGameObject;
 		}
+	
 	}
 }

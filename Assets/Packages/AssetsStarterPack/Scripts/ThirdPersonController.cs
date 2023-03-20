@@ -3,6 +3,7 @@
 using UnityEngine.InputSystem;
 #endif
 
+using Photon.Pun;
 using MetaversePrototype.Tools;
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -126,6 +127,9 @@ namespace StarterAssets
 
         MPSoundManagerPlayOptions audioOptions;
 
+        protected bool enableAnimator = true;
+        public bool _EnableAnimator {get {return enableAnimator;} set {enableAnimator = value;}}
+
         private bool IsCurrentDeviceMouse
         {
             get
@@ -201,7 +205,7 @@ namespace StarterAssets
                 QueryTriggerInteraction.Ignore);
 
             // update animator if using character
-            if (_hasAnimator)
+            if (_hasAnimator && enableAnimator)
             {
                 _animator.SetBool(_animIDGrounded, Grounded);
             }
@@ -290,7 +294,7 @@ namespace StarterAssets
                              new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
             // update animator if using character
-            if (_hasAnimator)
+            if (_hasAnimator && enableAnimator)
             {
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
@@ -305,7 +309,7 @@ namespace StarterAssets
                 _fallTimeoutDelta = FallTimeout;
 
                 // update animator if using character
-                if (_hasAnimator)
+                if (_hasAnimator && enableAnimator)
                 {
                     _animator.SetBool(_animIDJump, false);
                     _animator.SetBool(_animIDFreeFall, false);
@@ -324,7 +328,7 @@ namespace StarterAssets
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 
                     // update animator if using character
-                    if (_hasAnimator)
+                    if (_hasAnimator && enableAnimator)
                     {
                         _animator.SetBool(_animIDJump, true);
                     }
@@ -349,7 +353,7 @@ namespace StarterAssets
                 else
                 {
                     // update animator if using character
-                    if (_hasAnimator)
+                    if (_hasAnimator && enableAnimator)
                     {
                         _animator.SetBool(_animIDFreeFall, true);
                     }
@@ -399,7 +403,7 @@ namespace StarterAssets
                     audioOptions.SpatialBlend = 1;
                     audioOptions.MinDistance = 1;
                     audioOptions.MaxDistance = 10;
-                    audioOptions.Location = transform.TransformPoint(_controller.center);
+                    audioOptions.Location = transform.position;
                     audioOptions.Volume = FootstepAudioVolume;
                     MPSoundManager.Instance.PlaySound(FootstepAudioClips[index], audioOptions);
                 }
@@ -415,7 +419,7 @@ namespace StarterAssets
                 audioOptions.SpatialBlend = 1;
                 audioOptions.MinDistance = 1;
                 audioOptions.MaxDistance = 10;
-                audioOptions.Location = transform.TransformPoint(_controller.center);
+                audioOptions.Location = transform.position;
                 audioOptions.Volume = FootstepAudioVolume;
                 MPSoundManager.Instance.PlaySound(LandingAudioClip, audioOptions);
             }

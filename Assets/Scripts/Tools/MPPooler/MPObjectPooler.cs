@@ -20,7 +20,9 @@ namespace MetaversePrototype.Tools
 
 		// this object is just used to group the pooled objects
 		protected GameObject _waitingPool = null;
+		public GameObject WaitingPool {get {return _waitingPool;}}
 		protected MPObjectPool _objectPool;
+		public MPObjectPool ObjectPool {get {return _objectPool;}}
 		protected const int _initialPoolsListCapacity = 5;
 		protected bool _onSceneLoadedRegistered = false;
         

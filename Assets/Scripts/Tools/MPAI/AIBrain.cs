@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Sirenix.OdinInspector;
+using Photon.Pun;
 
 namespace MetaversePrototype.Tools
 {
-	public class AIBrain : MonoBehaviour
+	public class AIBrain : MonoBehaviourPunCallbacks
 	{
 		[Header("Debug")]
 		/// the owner of that AI Brain, usually the associated character
@@ -64,8 +65,10 @@ namespace MetaversePrototype.Tools
 			return decisions;
 		}
 
-		protected void OnEnable()
+		public override void OnEnable()
 		{
+			base.OnEnable();
+			
 			if (ResetBrainOnEnable)
 			{
 				ResetBrain();
@@ -97,7 +100,7 @@ namespace MetaversePrototype.Tools
 
 		protected virtual void Update()
 		{
-			if (!BrainActive || (CurrentState == null) || (Time.timeScale == 0f))
+			if (!BrainActive || (CurrentState == null) || (Time.timeScale == 0f) || !PhotonNetwork.IsMasterClient)
 			{
 				return;
 			}

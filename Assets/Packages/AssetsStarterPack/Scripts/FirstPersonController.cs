@@ -98,6 +98,9 @@ namespace StarterAssets
             set { _cinemachineTargetPitch = value; }
         }
 
+		protected bool enableAnimator = true;
+        public bool _EnableAnimator {get {return enableAnimator;} set {enableAnimator = value;}}
+
 		private bool IsCurrentDeviceMouse
 		{
 			get
@@ -167,7 +170,7 @@ namespace StarterAssets
 			Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
 		
 			// update animator if using character
-            if (_hasAnimator)
+            if (_hasAnimator && enableAnimator)
             {
                 _animator.SetBool(_animIDGrounded, Grounded);
             }
@@ -247,7 +250,7 @@ namespace StarterAssets
 			// move the player
 			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 		
-			if (_hasAnimator)
+			if (_hasAnimator && enableAnimator)
             {
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
@@ -261,7 +264,7 @@ namespace StarterAssets
 				// reset the fall timeout timer
 				_fallTimeoutDelta = FallTimeout;
 
-				if (_hasAnimator)
+				if (_hasAnimator && enableAnimator)
                 {
                     _animator.SetBool(_animIDJump, false);
                     _animator.SetBool(_animIDFreeFall, false);
@@ -279,7 +282,7 @@ namespace StarterAssets
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 				
-					if (_hasAnimator)
+					if (_hasAnimator && enableAnimator)
                     {
                         _animator.SetBool(_animIDJump, true);
                     }
@@ -303,7 +306,7 @@ namespace StarterAssets
 				}
 				else
 				{
-					if (_hasAnimator)
+					if (_hasAnimator && enableAnimator)
                     {
                         _animator.SetBool(_animIDFreeFall, true);
                     }

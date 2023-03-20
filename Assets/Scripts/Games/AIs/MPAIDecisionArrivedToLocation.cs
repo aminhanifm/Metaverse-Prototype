@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MetaversePrototype.Tools;
+using Photon.Pun;
 
 namespace MetaversePrototype.Game
 {
@@ -16,13 +17,15 @@ namespace MetaversePrototype.Game
 		protected virtual bool EvaluateDistance()
 		{
 			
-			if (_agent.velocity.magnitude > 0 
-				&& _agent.remainingDistance <= _agent.stoppingDistance)
-			{
-				_agent.velocity = Vector3.zero;
-				// print("Arrived");
-				return true;
+			if(PhotonNetwork.IsMasterClient){
+				if (_agent.velocity.magnitude > 0 && _agent.remainingDistance <= _agent.stoppingDistance)
+				{
+					_agent.velocity = Vector3.zero;
+					// print("Arrived");
+					return true;
+				}
 			}
+			
 
 
 			return false;

@@ -16,7 +16,7 @@ namespace MetaversePrototype.Game
 
 			_alreadyRan = true;
 			int patrolPoint = Random.Range(0, characterManager._AvailablePatrolPoint.Length);
-			_agent.SetDestination(characterManager._AvailablePatrolPoint[patrolPoint].transform.position);
+			_agent.SetDestination(characterManager._AvailablePatrolPoint[patrolPoint]);
 
 		}
 
