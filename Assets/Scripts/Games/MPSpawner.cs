@@ -42,7 +42,7 @@ namespace MetaversePrototype.Game
                 switch (spawnerTypes)
                 {
                     case SpawnerTypes.Player:
-                        spawnedObject = PhotonNetwork.Instantiate(MPGameManager.Instance.playerPrefab.name, spawnPosition, Quaternion.identity);
+                        spawnedObject = PhotonNetwork.Instantiate("Player", spawnPosition, Quaternion.identity);
                         break;
                     case SpawnerTypes.NPC:
                         // spawnedObject = PhotonNetwork.InstantiateRoomObject(objectPooler.GameObjectToPool.name, spawnPosition, Quaternion.identity);

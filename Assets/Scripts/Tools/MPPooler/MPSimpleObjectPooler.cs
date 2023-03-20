@@ -100,10 +100,10 @@ namespace MetaversePrototype.Tools
 		}
 		
 		[PunRPC]
-		public void SetObjectsPool(int viewID, bool initialStatus){
+		public void SetObjectsPool(int viewID){
 			GameObject newGameObject = PhotonView.Find(viewID).gameObject;
 
-			newGameObject.SetActive(initialStatus);
+			newGameObject.SetActive(false);
 			// SceneManager.MoveGameObjectToScene(newGameObject, this.gameObject.scene);
 			if (NestWaitingPool)
 			{
@@ -118,7 +118,7 @@ namespace MetaversePrototype.Tools
 		protected virtual GameObject AddOneObjectToThePool()
 		{
 			if(!PhotonNetwork.IsMasterClient){
-				Debug.LogWarning("Test");
+				
 				return null;
 			}
 
@@ -134,14 +134,14 @@ namespace MetaversePrototype.Tools
 				
 				GameObject newGameObject = null;
 				StringBuilder pooledObjName = new StringBuilder();
-				pooledObjName.Append(GameObjectToPool.name + "-" + _pooledGameObjects.Count);
+				pooledObjName.Append("NPC - " + _pooledGameObjects.Count);
 
-				newGameObject = PhotonNetwork.InstantiateRoomObject(GameObjectToPool.name, Vector3.zero, Quaternion.identity);
+				newGameObject = PhotonNetwork.InstantiateRoomObject("NPC", Vector3.zero, Quaternion.identity);
 				
 				PhotonView pvObj = newGameObject.MPGetComponentNoAlloc<PhotonView>();
 				
 				viewIDList = viewIDList.Append(pvObj.ViewID).ToArray();
-				photonView.RPC("SetObjectsPool", RpcTarget.AllBufferedViaServer, pvObj.ViewID, initialStatus);
+				photonView.RPC("SetObjectsPool", RpcTarget.AllBufferedViaServer, pvObj.ViewID);
 				// photonView.RPC("SetNPCListRPC", RpcTarget.MasterClient, pvObj.ViewID);
 				return newGameObject;
 			}

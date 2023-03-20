@@ -23,26 +23,15 @@ namespace MetaversePrototype.Game
         public PhotonView _PhotonView {get {return photonView;} set { photonView = value;}}
         public MPSimpleObjectPooler NPCPooler;
 
-        [Header("Player")]
-        [AssetsOnly] public GameObject playerPrefab;
-
         private float curTime;
         private float delayTime;
         [Header("NPC")]
         [ShowInInspector] [ReadOnly] protected int npcCount = 0;
-        [AssetsOnly] public GameObject NPCPrefab;
         public int _NPCCount {get {return npcCount;} set {npcCount = value;}}
 
         protected override void Awake() {
             spawnerList = GameObject.FindObjectsOfType<MPSpawner>();
             delayTime = Random.Range(10,20);
-            
-            DefaultPool pool = PhotonNetwork.PrefabPool as DefaultPool;
-            if (pool != null && playerPrefab != null && NPCPrefab != null)
-            {
-                pool.ResourceCache.Add(playerPrefab.name, playerPrefab);
-                pool.ResourceCache.Add(NPCPrefab.name, NPCPrefab);
-            }
         }
 
         private void Start() {

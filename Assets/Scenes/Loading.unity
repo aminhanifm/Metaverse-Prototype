@@ -1818,6 +1818,9 @@ MonoBehaviour:
   progressBar: {fileID: 650915291}
   progressText: {fileID: 29573306}
   useAssetBundle: 1
+  prefabs:
+  - {fileID: 7302501694384853151, guid: 88bec435c44f1424fbd90a62485a6b1c, type: 3}
+  - {fileID: 4169417775816642545, guid: cb3e8478fa4143a48b5236e763d1c12c, type: 3}
 --- !u!1 &1648991166
 GameObject:
   m_ObjectHideFlags: 0

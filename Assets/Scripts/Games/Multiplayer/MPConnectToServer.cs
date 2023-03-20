@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
@@ -22,8 +23,17 @@ namespace MetaversePrototype.Game
 
         #region Photon Settings
         private const byte maxPlayer = 4;
+        public List<GameObject> prefabs;
 
         #endregion
+
+        private void Awake() {
+            DefaultPool pool = PhotonNetwork.PrefabPool as DefaultPool;
+            foreach (GameObject obj in prefabs)
+            {
+                pool.ResourceCache.Add(obj.name, obj);
+            }
+        }
 
         private void Start() {
             PhotonNetwork.ConnectUsingSettings();
@@ -62,6 +72,8 @@ namespace MetaversePrototype.Game
         public override void OnJoinedRoom()
         {
             base.OnJoinedRoom();
+            
+            PhotonNetwork.IsMessageQueueRunning = false;
 
             UpdateDebugText("Joining a room..");
             
@@ -72,9 +84,9 @@ namespace MetaversePrototype.Game
                 PhotonNetwork.LoadLevel("Prototype Demo");
             }
         }
-        protected const string urlAndroid = "https://firebasestorage.googleapis.com/v0/b/metaverse-prototype.appspot.com/o/Android%2Fprototype%20demo?alt=media&token=bf7b4474-39f1-4898-a6bc-28886e2d3ff3";
-        protected const string urlWindow = "https://firebasestorage.googleapis.com/v0/b/metaverse-prototype.appspot.com/o/Windows%2Fprototype%20demo?alt=media&token=031becef-688a-4234-883d-d114b84569cf";
-        protected const string urlWebGL = "https://firebasestorage.googleapis.com/v0/b/metaverse-prototype.appspot.com/o/WebGL%2Fprototype%20demo?alt=media&token=0a031a0a-1512-4611-8d91-50d2f9c5eb47";
+        protected const string urlAndroid = "https://drive.google.com/uc?export=download&id=1sS__LYUNDYHDKddmzCcQidDwjXv1KD-a";
+        protected const string urlWindow = "https://drive.google.com/uc?export=download&id=1Df3jS53xZAPxhaq9LyQr2B_zzu887DMU";
+        protected const string urlWebGL = "https://drive.google.com/uc?export=download&id=1vNEihUPFX9nkr-vHYXR0NHjZgJ_lJ3kq";
         protected const string bundleName = "prototype demo";
         IEnumerator LoadBundles(){
             string url = string.Empty;
@@ -96,17 +108,63 @@ namespace MetaversePrototype.Game
             }
             
             UnityWebRequest www = UnityWebRequestAssetBundle.GetAssetBundle(url);
+            // print(url);
             StartCoroutine(WaitForResponse(www));
             yield return www.SendWebRequest();
     
             if (www.result != UnityWebRequest.Result.Success) {
-                UpdateDebugText("Failed joining a room.");
+                UpdateDebugText("Failed joining a room. ("+ www.error + ")");
+                yield return new WaitForSeconds(5);
+                UpdateDebugText("Connection timeout");
+                PhotonNetwork.Disconnect();
+                UpdateDebugText("Try to reopen the game");
             }
             else {
                 AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(www);
                 string[] scenePaths = bundle.GetAllScenePaths();
                 PhotonNetwork.LoadLevel(scenePaths[0]);
+
+                // Wait until the scene has loaded before starting to receive RPCs
+                if (!PhotonNetwork.IsMasterClient)
+                {
+                    float timeout = 5.0f;  // Timeout in seconds
+                    float timer = 0.0f;
+
+                    while (!AllScenesLoaded(scenePaths) && timer < timeout)
+                    {
+                        timer += Time.deltaTime;
+                        yield return null;
+                    }
+
+                    if (!AllScenesLoaded(scenePaths))
+                    {
+                        // Timeout: Master client takes over and loads the level
+                        if (PhotonNetwork.IsMasterClient)
+                        {
+                            PhotonNetwork.LoadLevel(scenePaths[0]);
+                        }
+                        else
+                        {
+                            UpdateDebugText("Timeout waiting for other clients to load level.");
+                        }
+                    }
+                }
+
+                // Now that the scene has loaded, start receiving RPCs
+                PhotonNetwork.IsMessageQueueRunning = true;
             }
+        }
+
+        bool AllScenesLoaded(string[] scenePaths)
+        {
+            foreach (string scenePath in scenePaths)
+            {
+                if (!SceneManager.GetSceneByName(scenePath).isLoaded)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         IEnumerator WaitForResponse(UnityWebRequest request)
